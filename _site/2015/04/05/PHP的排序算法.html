@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+<title>Php的排序算法</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="上善若水，人淡如菊">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/hc.css" rel="stylesheet">
+<link href="/css/highlight.css" rel="stylesheet">
+<link href="/css/font-awesome.css" rel="stylesheet">
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif] d-->
+
+  </head>
+  <body>
+    <div class="nav-toggle"><i class="fa fa-bars fa-2x"></i> Herring Cove </div>
+    <div id = "wrapper">
+      <div class="navbar navbar-default" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <p class="navbar-brand">Jason's Klog</p>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+      <li><a href="/list.html">List</a></li>
+      <li><a href="/links.html">Links</a></li>
+      <li><a href="/projects.html">Projects</a></li>
+      <li><a href="/about.html">About</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+
+<!-- Sidebar -->
+<div id="sidebar-wrapper">
+  <ul class="sidebar-nav">
+    <li class="sidebar-brand"><a href="/"><h1 class="brand">Jason's Klog</h1></a><h3>上善若水，人淡如菊</h3></li>
+    <hr />
+    <li><a href="/list.html">List</a></li>
+    <li><a href="/links.html">Links</a></li>
+    <li><a href="/projects.html">Projects</a></li>
+    <li><a href="/about.html">About</a></li>
+    <hr />
+    <div id="social-wrapper">
+      <li> <a href="http://www.twitter.com/"><i class="fa fa-twitter-square"></i> @twitter</a></li>
+      <li> <a href="http://www.linkedin.com"><i class="fa fa-linkedin-square"></i> linkedin</a> </li>
+      <li> <a href="http://www.facebook.com"><i class="fa fa-facebook-square"></i> facebook</a></li>
+      <li> <a href="http://www.github.com/arnp"><i class="fa fa-github-square"></i> github</a> </li>
+    </div>
+  </ul>
+</div>
+
+      <div class="container">
+        <div id="article">
+  <div id="fixedTitle"><h2></h2><a>Top</a></div>
+  <div class="article-title">Php的排序算法</div>
+  <p class="meta">
+    <small>
+      &nbsp;<i class="fa fa-calendar-o"></i> 05 Apr 2015
+    </small>
+  </p> <hr/>
+  <div class="post">
+    <h4>一些常见排序</h4>
+
+<ol>
+<li><a href="#bubbleSort">冒泡排序</a></li>
+<li><a href="#selectionSort">选择排序</a></li>
+<li><a href="#insertSort">插入排序</a></li>
+<li><a href="#bucketSort">桶排序</a></li>
+<li><a href="#quickSort">快速排序</a></li>
+</ol>
+
+<h2>准备</h2>
+
+<ol>
+<li><p>先写一个打印输出的方法，用于调试。</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+    <span class="k">function</span> <span class="nf">p</span><span class="p">(</span><span class="nv">$msg</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="s1">&#39;&lt;pre style=&quot;color:red;&quot;&gt;&#39;</span><span class="p">;</span>
+        <span class="nb">print_r</span><span class="p">(</span><span class="nv">$msg</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div></li>
+<li><p>一个需要排序的数组。</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+    <span class="nv">$arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">];</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div></li>
+</ol>
+
+<h2 id="bubbleSort">I. 冒泡排序(BubbleSort)</h2>
+
+<h3>What?</h3>
+
+<p>什么是冒泡排序呢？</p>
+
+<p>顾名思义，像水里一长串上浮的泡泡，一个个的冒出水面，而且每次冒出水面的泡泡都是最大的。</p>
+
+<p>冒泡排序也是不断地将最大的数找出来移到最后它们应该在的位置上；</p>
+
+<p>但是如何让它具有冒泡的效果呢？这就体现在移的过程中。通过相邻两数的比较，将大的数放在后面，这样就能够像冒泡一样，将最大数移到最后的位置上。</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+    <span class="c1">// &amp;$arr，使用&amp;，这是因为像冒泡那样比较移动都是发生在该数组中的，所以应该直接操作原数组，使用地址符&#39;&amp;&#39;</span>
+    <span class="k">function</span> <span class="nf">bubbleSort</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$arr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$temp</span><span class="p">;</span>
+        <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">);</span>
+        <span class="c1">// 这是外层循环，用来控制冒出水面泡泡的数量，即找到多少个最大数</span>
+        <span class="c1">// 如果有5个数，我们只要找出4个最大的就可以了，剩下的必然最小，所以$i &lt; $count - 1</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span> <span class="nv">$i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 这里是内层循环，用来将两个相邻的数进行比较</span>
+            <span class="c1">// 如果前面的数大于后面的数，就交换它们的位置</span>
+            <span class="c1">// 这样一步步交换移动，可以将最大数浮出水面(移动最后)</span>
+
+            <span class="c1">// 为什么是$count-1-$i ?</span>
+            <span class="c1">// 如果有5个数，两个相邻数比较的次数为4次</span>
+            <span class="c1">// 当找到一个最大数后，只剩4个数时，两两相较的次数变为3次</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$j</span> <span class="o">&lt;</span> <span class="nv">$count</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="nv">$i</span><span class="p">;</span> <span class="o">++</span><span class="nv">$j</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// 两两相较</span>
+                <span class="c1">// 当前面的数较大时，需交换这两个数</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+                    <span class="nv">$temp</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">];</span>
+                    <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+                    <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$temp</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// =========================================</span>
+    <span class="c1">// 总结：</span>
+    <span class="c1">// 冒泡排序有两层循环</span>
+    <span class="c1">// 外层控制找最大数的个数，记得只需找 $count-1 个就OK了</span>
+    <span class="c1">// 内层控制是为浮出一个最大数，而从头开始的两个相邻数之间比较的次数。在10个数中两两相较的次数为9次</span>
+    <span class="c1">// 判断大数在前时，就交换两数。</span>
+    <span class="c1">//</span>
+    <span class="c1">// 冒泡 = 控制找最大数次数的外层循环</span>
+    <span class="c1">//          +   控制为找出最大数而两两相较次数的内层循环</span>
+    <span class="c1">//              +   判断大数在前时的交换</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+<p>去掉邪恶的注释后的精简版：</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+    <span class="k">function</span> <span class="nf">bubbleSort</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$arr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$temp</span><span class="p">;</span>
+        <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span> <span class="nv">$j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$j</span> <span class="o">&lt;</span> <span class="nv">$count</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="nv">$i</span><span class="p">;</span> <span class="o">++</span><span class="nv">$j</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nv">$temp</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">];</span>
+                    <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+                    <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$temp</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+<h2 id="selectionSort">II. 选择排序(SelectionSort)</h2>
+
+<h3>What?</h3>
+
+<p>有点类似于冒泡，不同点是，在得出最大数的方法上，一个是比较交换的方式(冒泡)
+，一个是比较赋值的方式(选择)，选择排序优于冒泡排序，因为不需要频繁的交换</p>
+
+<p>选择排序，需要遍历所有数，并使用两个临时变量分别记录当前最大的数及这个最大数的索引，若后面有大于这个临时变量的值的数，就将这个大数赋值给临时变量同时记录索引</p>
+
+<p>遍历到最后，两个临时变量中存储的将是最大数和最大数的索引，将它与最后位置的数进行交换</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+    <span class="k">function</span> <span class="nf">SelectionSort</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$arr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$temp</span><span class="p">;</span> <span class="c1">// 保存临时最大数的值</span>
+        <span class="nv">$index</span><span class="p">;</span> <span class="c1">// 保存临时最大数的索引</span>
+        <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">);</span>
+        <span class="c1">// 找最大数的个数</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$temp</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// 第1个数时，将临时最大数设为它自己</span>
+            <span class="nv">$index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+            <span class="c1">// 遍历比较剩余的所有数，每找出一个最大数，剩余数就减1</span>
+            <span class="c1">// 因为将第1个数假定为临时最大数，所以从第二个数(索引为1)比较</span>
+            <span class="k">for</span> <span class="p">(</span> <span class="nv">$j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$j</span> <span class="o">&lt;</span> <span class="nv">$count</span> <span class="o">-</span> <span class="nv">$i</span><span class="p">;</span> <span class="o">++</span><span class="nv">$j</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="nv">$temp</span> <span class="o">&lt;</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nv">$index</span> <span class="o">=</span> <span class="nv">$j</span><span class="p">;</span>
+                    <span class="nv">$temp</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">];</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="c1">// 将最大数与最后面的数交换位置</span>
+            <span class="c1">// 最后的数如果跟这个临时最大数一样就不需要互换位置</span>
+            <span class="c1">// 这里的交换原则中，已经有了第一句：$temp = $arr[$index]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$temp</span> <span class="o">!=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$count</span> <span class="o">-</span> <span class="nv">$i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+                <span class="nv">$arr</span><span class="p">[</span><span class="nv">$index</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$count</span> <span class="o">-</span> <span class="nv">$i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+                <span class="nv">$arr</span><span class="p">[</span><span class="nv">$count</span> <span class="o">-</span> <span class="nv">$i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$temp</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// ==================================================</span>
+    <span class="c1">// 总结：</span>
+    <span class="c1">// 选择排序有两层循环</span>
+    <span class="c1">// 外层循环控制找最大数的个数</span>
+    <span class="c1">// 内层循环控制遍历所有的剩余数</span>
+    <span class="c1">// 在内层循环遍历所有剩余数之前，将第一个剩余数的值和位置设为临时最大值及其索引</span>
+    <span class="c1">// 内存循环遍历好后，临时变量中已经保存了最大数和它的索引</span>
+    <span class="c1">// 判断最后位置的数跟最大数是否一致，不一致就交换它们。</span>
+
+    <span class="c1">// 选择排序  =  控制找最大数的个数的外层循环</span>
+    <span class="c1">//              +   初始化临时最大值$temp=$arr[0] 和 临时最大值的索引$index=0</span>
+    <span class="c1">//              +   遍历剩余最大数的内存循环，跳过第一个数(索引0)</span>
+    <span class="c1">//                  +   判断当前遍历的数大于临时最大数，就复制给临时最大数，并记录索引</span>
+    <span class="c1">//              +   最大数与末尾数不一致时交换两数</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+<p>无注释精简版：</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+    <span class="k">function</span> <span class="nf">selectionSort</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$arr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$temp</span><span class="p">;</span>
+        <span class="nv">$index</span><span class="p">;</span>
+        <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$temp</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+            <span class="nv">$index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">for</span> <span class="p">(</span> <span class="nv">$j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$j</span> <span class="o">&lt;</span> <span class="nv">$count</span> <span class="o">-</span> <span class="nv">$i</span><span class="p">;</span> <span class="o">++</span><span class="nv">$j</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="nv">$temp</span> <span class="o">&lt;</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nv">$temp</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">];</span>
+                    <span class="nv">$index</span> <span class="o">=</span> <span class="nv">$j</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="nv">$temp</span> <span class="o">!=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$arr</span><span class="p">[</span><span class="nv">$index</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+                <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$temp</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+<h2 id="insertSort">III. 插入排序(InsertSort)</h2>
+
+<h3>What?</h3>
+
+<p>插入排序，就像小时候上学排座位表一样，老师会让同学们排队，按高个子在后，小个子在前的规则站队。当老师挑出一个站在后面的个矮的同学让他站到队伍的合适的位置去时，这个同学就被插入到队伍中，当他插入队伍时，本来在他前面的所有人都要后移，这样才能在前面给他留下空位。</p>
+
+<p>插入排序，会从前往后遍历每一个数，并将遍历到的数插入到从第1个数到这个数之间的合适的位置上。</p>
+
+<p>每遍历到一个数之前它前面的所有数都是规则的。</p>
+
+<p>这有点像站队时，先有一个同学站到最前面排队，然后又有一个同学过来排队，如果后来的同学个子矮于第一个同学，就站出队伍，要求第一个同学往后站一个位置，这个同学就能够插入到第一个位置上了。对于第三个排队的同学来说，他前面的队伍是有序的，他只要找到自己的位置插进去就好。</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">insertSort</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$arr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$temp</span><span class="p">;</span>
+    <span class="nv">$index</span><span class="p">;</span> <span class="c1">// 合适的位置</span>
+    <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">);</span>
+    <span class="c1">// 第一个数是不需要找合适的位置的</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// 默认合适的位置为第一个，因为有可能比较所有前面的数均没找到比它小的</span>
+        <span class="c1">// 判断当前数的位置是否合适</span>
+        <span class="c1">// 因为它前面所有的数都是有序的，所以只需跟它前面的数比较</span>
+        <span class="c1">// 若小于它前面的数，则位置不合适，需要插入到合适的位置上</span>
+        <span class="c1">// 大于它前面的数，则位置合适，不需要做任何动作</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 通过跟前面数的比较发现位置不合适后，则往前一位比较</span>
+            <span class="c1">// 直到找到有一个数小于它，那这个数合适的位置就是这个小于它的数的后面。</span>
+            <span class="nv">$temp</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span> <span class="c1">// 保存要插入的值</span>
+            <span class="k">for</span> <span class="p">(</span> <span class="nv">$j</span> <span class="o">=</span> <span class="nv">$i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span> <span class="nv">$j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="nv">$j</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nv">$temp</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nv">$index</span> <span class="o">=</span> <span class="nv">$j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="c1">// 将这个合适位置到原位置前一位的所有数都后移一位</span>
+            <span class="c1">// 然后将这个数的值赋到(插入)合适的位置上</span>
+            <span class="c1">// 后移的动作是从后往前的</span>
+            <span class="k">for</span> <span class="p">(</span> <span class="nv">$k</span> <span class="o">=</span> <span class="nv">$i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$k</span> <span class="o">&gt;=</span> <span class="nv">$index</span><span class="p">;</span> <span class="o">--</span><span class="nv">$k</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$arr</span><span class="p">[</span><span class="nv">$k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$k</span><span class="p">];</span>
+            <span class="p">}</span>
+            <span class="nv">$arr</span><span class="p">[</span><span class="nv">$index</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$temp</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// =======================================================</span>
+    <span class="c1">// 总结：</span>
+    <span class="c1">// 插入排序是为每个遍历到的数找到它在它前面的有序集合中的位置。</span>
+    <span class="c1">// 一层循环用来遍历所有数，可以跳过第1个数</span>
+    <span class="c1">// 判断是否需要找合适的位置，若需要就找到这个合适的位置</span>
+    <span class="c1">// 将这个合适位置到这个数原位置前面一位的所有数后移1位。</span>
+    <span class="c1">// 插入这个数到合适的位置上去</span>
+
+    <span class="c1">// 插入排序  =  遍历所有数的一层循环</span>
+    <span class="c1">//              +   该数的位置是否不合适的判断</span>
+    <span class="c1">//                  +   为找合适的位置的倒序遍历循环</span>
+    <span class="c1">//                      +   比较得出合适位置后结束上层循环</span>
+    <span class="c1">//                  +   后移1位合适位置到该数原位置前1位之间所有数的循环</span>
+    <span class="c1">//                  +   将该数插入到这个合适位置</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+<p>去掉注释的版本：</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+    <span class="k">function</span> <span class="nf">insertSort</span><span class="p">(</span><span class="o">&amp;</span><span class="nv">$arr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$temp</span><span class="p">;</span>
+        <span class="nv">$index</span><span class="p">;</span>
+        <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$temp</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+                <span class="k">for</span> <span class="p">(</span> <span class="nv">$j</span> <span class="o">=</span> <span class="nv">$i</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span> <span class="nv">$j</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="nv">$j</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nv">$temp</span> <span class="p">)</span> <span class="p">{</span>
+                        <span class="nv">$index</span> <span class="o">=</span> <span class="nv">$j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">for</span> <span class="p">(</span> <span class="nv">$k</span> <span class="o">=</span> <span class="nv">$i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$k</span> <span class="o">&gt;=</span> <span class="nv">$index</span><span class="p">;</span> <span class="o">--</span><span class="nv">$k</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nv">$arr</span><span class="p">[</span><span class="nv">$k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$k</span><span class="p">];</span>
+                <span class="p">}</span>
+                <span class="nv">$arr</span><span class="p">[</span><span class="nv">$index</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$temp</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+<h2 id="bucketSort">IV. 桶排序(BucketSort)</h2>
+
+<p>假设我们有很多硬币，这些硬币中有1分、2分、5分、1角、5角和1元的，每种硬币的数量都很大，这时候需要排序这些硬币你会怎么做？</p>
+
+<p>我们一般的做法是将这些硬币先按面额整理区分开来，喜欢有点情调的话，我们会把相同面额的硬币摞起来，这时的形状看起来就是一个个的桶子(圆柱)。</p>
+
+<p>现在再让我们排序这些整理好的硬币，是不是非常容易了。</p>
+
+<p>桶排序的使用比较受限制，一般不要用于最大数与最小数间隔过大的情况下，不然形成桶子的数量将会非常大，十分占用内存。也不建议使用在数据比较稀疏的情况下。</p>
+
+<p>桶排序，在一些合适的情况下，速度是非常快的。</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="c1">// 桶排序不是对原数组进行操作，所以不使用地址符</span>
+<span class="k">function</span> <span class="nf">bucketSort</span><span class="p">(</span><span class="nv">$arr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">);</span>
+    <span class="nv">$max</span> <span class="o">=</span> <span class="nv">$min</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// 初始化最大最小数都为第一个元素值</span>
+    <span class="c1">// 遍历数组得到最大最小值</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nv">$max</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$max</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nv">$min</span> <span class="p">)</span> <span class="p">{</span> <span class="c1">// 使用else if可以减少判断次数</span>
+            <span class="nv">$min</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 制作桶子的对照值，就如面额一样</span>
+    <span class="nv">$bucket</span> <span class="o">=</span> <span class="nb">array_fill</span><span class="p">(</span><span class="nv">$min</span><span class="p">,</span> <span class="nv">$max</span> <span class="o">-</span> <span class="nv">$min</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="c1">// 遍历所有数，将数的个数记录到桶子上</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="o">++</span> <span class="nv">$bucket</span><span class="p">[</span><span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">]];</span>
+    <span class="p">}</span>
+
+    <span class="nv">$result</span><span class="p">;</span>
+    <span class="c1">// 遍历桶子形成一个数组</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="nv">$min</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;=</span> <span class="nv">$max</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// 当$bucket[$i]的值不为0，就添加$bucket[$i]个$i</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="nv">$j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$j</span> <span class="o">&lt;</span> <span class="nv">$bucket</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span> <span class="o">++</span><span class="nv">$j</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$result</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nv">$result</span><span class="p">;</span>
+
+    <span class="c1">// ======================================================</span>
+    <span class="c1">// 总结：</span>
+    <span class="c1">// 找出这个数组中的最大数和最小数</span>
+    <span class="c1">// 制作一个从最小数到最大数的桶子对照值的集合</span>
+    <span class="c1">// 遍历数组，将元素的值放到桶子上，形成一个个桶子</span>
+    <span class="c1">// 遍历桶子对照值的集合，找出真正的桶子(值大于0)</span>
+    <span class="c1">// 往结果集中放入桶子中的值一般个数的对照值</span>
+
+    <span class="c1">// 桶排序   =   一次找最大最小数的遍历循环</span>
+    <span class="c1">//          +   制作从最小数到最大数的桶子对照值的集合</span>
+    <span class="c1">//          +   再一次遍历循环，用于将数组的值填入桶子对照值集合中</span>
+    <span class="c1">//          +   遍历桶子对照集合，找出真正的桶子</span>
+    <span class="c1">//              + 往结果集中放入桶子值个数的对照值</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+<p>无注释精简版：</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+    <span class="k">function</span> <span class="nf">bucketSort</span><span class="p">(</span><span class="nv">$arr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">);</span>
+        <span class="nv">$max</span> <span class="o">=</span> <span class="nv">$min</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nv">$max</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$max</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nv">$min</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$min</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nv">$bucket</span> <span class="o">=</span> <span class="nb">array_fill</span><span class="p">(</span><span class="nv">$min</span><span class="p">,</span> <span class="nv">$max</span> <span class="o">-</span> <span class="nv">$min</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="o">++</span> <span class="nv">$bucket</span><span class="p">[</span><span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">]];</span>
+        <span class="p">}</span>
+        <span class="nv">$result</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="nv">$min</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;=</span> <span class="nv">$max</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span> <span class="nv">$j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$j</span> <span class="o">&lt;</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span> <span class="o">++</span><span class="nv">$j</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$result</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$i</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$result</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+<h2 id="quickSort">V. 快速排序(QuickSort)</h2>
+
+<h3>基本思想</h3>
+
+<p>快排基于算法中很重要的思想就是分治。简单地说，分治就是分而治之，大事化小，把复杂的问题分为多个简单的问题，解决了这个简单问题，事情也就很容易的解决了。</p>
+
+<h3>如何分治</h3>
+
+<p>分解问题：将原问题分为一系列的子问题
+解决子问题：递归解决子问题。如果子问题足够小，直接解决子问题
+合并问题：将子问题的结果合并为原问题</p>
+
+<h3>分治现实中的例子</h3>
+
+<p>一个国家，由主席、总理两个人这是完全治理不过来的，所以将国家又分成了很多的省和直辖市，但是靠各位省长治理一省，那也是不可能的；这样省又划分了好多市，市长同样不能够一个人治理一个市，...一直到村长，这才是一个人可以治理的范围。所以村长管理好了所有的村，那乡长就治好了乡，所有乡长镇长治好了乡镇，那么就是县长治好了县,...所有的省长都治好了省，那一个国家就被治理好了。这就是分治思想在现实生活中的例子。</p>
+
+<h3>在排序中如何分治</h3>
+
+<p>首先我们需要一个数作为参考标志，可以是数组中的任意数，但是一般我们使用第一个数作为参考标志，因为第一个数也具有不确定性。然后遍历这个数组，将它分成一个小于它的数的集合和一个大于等于它的数的集合；再来为每个集合找一个标志，形成它们的两个集合(小于标志数的集合和大于等于标志数的集合)...一直到形成的集合只有一个数或没有数。</p>
+
+<h3>分治排序的例子</h3>
+
+<p>还是排队，高个子在后，小个子在前。我们以第一人作为标志，身高低于他的站在他前面，身高高于或等于他的站在他后面，这样再在身高低于他的所有人中和高于等于他身高的人中，分别找一个标志，再如此比较站队...最后的队伍一定是有序的。</p>
+
+<h3>分治排序的演示</h3>
+<div class="highlight"><pre><code class="language-text" data-lang="text">3, 5, 2, 8, 7, 1, 2 // 原始数组
+[2, 1, 2], 3, [5, 8, 7] // 以第一个数3作为标志，形成的小于和大于等于它的两个集合
+[[1], 2, [2]], 3, [[], 5, [8, 7]] // 再对集合中的数以它们各自的第一个数做标志形成小于和大于等于的两个集合
+[[1], 2, [2]], 3, [[], 5, [[7], 8, []]]] // 只有[8, 7]这个集合还需要分治，其它集合只有1个或没有元素
+1, 2, 2, 3, 5, 7, 8 // 此时返回分治的结果，就是已经排序好的数组了
+</code></pre></div><div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">quickSort</span><span class="p">(</span><span class="nv">$arr</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">);</span>
+    <span class="c1">// 当数组元素的数量为0或1时，返回数组</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="nv">$count</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="nv">$count</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$arr</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nv">$flag</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="nv">$smaller</span> <span class="o">=</span> <span class="nv">$larger</span> <span class="o">=</span> <span class="p">[];</span> <span class="c1">// 两个集合</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nv">$flag</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$smaller</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nv">$larger</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">// 返回小于标志的集合分治结果、标志、大于等于标志的集合分治结果的合并集合</span>
+    <span class="k">return</span> <span class="nb">array_merge</span><span class="p">(</span><span class="nx">quickSort</span><span class="p">(</span><span class="nv">$smaller</span><span class="p">),</span> <span class="p">[</span><span class="nv">$flag</span><span class="p">],</span> <span class="nx">quickSort</span><span class="p">(</span><span class="nv">$larger</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+<p>形成小于、等于、大于参考数的集合的做法：(重复数多的情况下这种做法应该更好)</p>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+    <span class="k">function</span> <span class="nf">quickSort</span><span class="p">(</span><span class="nv">$arr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$count</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="nv">$count</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="nv">$count</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$arr</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$flag</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="nv">$smaller</span> <span class="o">=</span> <span class="nv">$larger</span> <span class="o">=</span> <span class="nv">$equal</span> <span class="o">=</span> <span class="p">[];</span> <span class="c1">// 3个集合</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="nv">$i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$count</span><span class="p">;</span> <span class="o">++</span><span class="nv">$i</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nv">$flag</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$smaller</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span> <span class="o">==</span> <span class="nv">$flag</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$equal</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nv">$larger</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nb">array_merge</span><span class="p">(</span><span class="nx">quickSort</span><span class="p">(</span><span class="nv">$smaller</span><span class="p">),</span> <span class="p">[</span><span class="nv">$flag</span><span class="p">],</span> <span class="nv">$equal</span><span class="p">,</span> <span class="nx">quickSort</span><span class="p">(</span><span class="nv">$larger</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</code></pre></div>
+  </div>
+</div>
+<a href="https://twitter.com/share" class="twitter-share-button " data-size="small" data-count="none">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+<ul class="pager">
+
+
+  <li class="next"><a href="/2015/04/07/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%AD%A6%E4%B9%A0.html">Newer &rarr;</a></li>
+
+</ul>
+
+<div id="disqus_thread">
+
+  <script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'jiayintaocom'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>
+    Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+  </noscript>
+
+  <a href="http://disqus.com" class="dsq-brlink">
+    comments powered by <span class="logo-disqus">Disqus</span>
+  </a>
+
+</div>
+
+
+      </div>
+      <div class="container">
+  <footer>
+    <p class="text-muted credit">
+      &copy; 2015 Jason's Klog &middot;
+      <a href="https://github.com/JasonJiaY"> github.com/JasonJiaY </a>
+      2015-04-14 14:22:30 +0800
+    </p>
+  </footer>
+</div>
+
+    </div>
+    <!-- Bootstrap core JavaScript-->
+<script src="/js/jquery-1.10.2.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/hc.js"></script>
+
+  </body>
+</html>
