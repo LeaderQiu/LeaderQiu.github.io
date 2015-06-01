@@ -1,0 +1,152 @@
+---
+layout: post
+title: "提高iOS开发效率的网站跟软件"
+description: 提高iOS开发效率的网站跟软件
+date: 2015-05-25 02:15:48
+category: 效率开发
+---
+
+##Unicode编码转换工具 (网站)
+
+Unicode 中文 互转等等
+
+使用链接：[http://tool.chinaz.com/Tools/Unicode.aspx](http://tool.chinaz.com/Tools/Unicode.aspx)
+
+##JSON格式化工具
+
+使用链接：http://www.w3cschool.cc/jsontool
+
+##Sip
+
+Sip 是一款超级方便的取色工具，能够给出css的十六位代码等12种颜色模式代码，支持快捷键操作，比如( ⌃⌥⌘ P )是开始取色。
+
+Sip 在OC程序的时候，会自动生成UIColor的代码。写网页CSS的时候，可以根据你的选项生成`十六进制、HSL、RGB`的值。
+
+同类型还有一款取色器软件同样强大：ColorSnapper [http://www.waerfa.com/colorsnapper](http://www.waerfa.com/colorsnapper)
+
+参考链接：[http://soft.macx.cn/5089.htm](http://soft.macx.cn/5089.htm)
+
+##Snip
+
+
+1.Snip支持网页滚屏截取，即：当网页高度超过一屏时，Snip 依然能够截取整个网页
+
+2.绑定QQ邮箱，在操作栏里一键跳入QQ邮箱邮件编辑页面，准备分享
+
+3.支持保存图片至剪切板
+
+4.自动识别桌面上的各个窗口，当鼠标移动到最临近的一个窗口时，被识别出的窗口会被高亮圈出，单击一下即可进入截屏操作区域
+
+参考链接：[http://www.snip.qq.com/](http://www.snip.qq.com/)
+
+##Dash （强烈推荐）
+
+API 调试工具, 支持130种API特性.API文档浏览器和代码片段的管理工具
+Mac平台的API文档浏览器和代码片段的管理工具，可以帮助你储存的代码片段,以及即时搜索和浏览文档几乎任何API文档
+
+参考链接:[http://soft.macx.cn/6016.htm](http://soft.macx.cn/6016.htm)
+
+##Reveal  UI分析工具（强烈推荐）
+
+UI是非常非常重要的一环。调试时我们一般用模拟器，提交前用真机做测试。用模拟器来调试UI效果虽然快捷方便，但有时仍然希望有更强大的工具来帮助分析UI，尤其是专注在UI的效果调试时。最近看到了Reveal这个工具，发现真的是强大无比，类似于FireFox上的FireBug，对于UI上的层的显示很清晰直观，可以很方便的用于UI的调试，用来学习UI的使用也是无上利器。
+
+参考链接：UI分析利器 Reveal [http://yanshinian.com/reveal/](http://yanshinian.com/reveal/)
+
+##Charles 网络封包分析工具
+
+在Mac下常用的截取网络封包的工具，在做iOS开发时，我们为了调试与服务器端的网络通讯协议，常常需要截取网络封包来分析。Charles通过将自己设置成系统的网络访问代理服务器，使得所有的网络访问请求都通过它来完成，从而实现了网络封包的截取和分析。
+
+参考链接：iOS开发工具-网络封包分析工具Charles [http://blog.devtang.com/blog/2013/12/11/network-tool-charles-intr/](http://blog.devtang.com/blog/2013/12/11/network-tool-charles-intr/)
+
+
+##Office 2011 for Mac OS X 简体中文 大客户版 （办公工具）（强烈推荐）
+
+微软的Office软件，功能自然不用我描述了。
+
+参考链接：[http://www.douban.com/group/topic/32911014/](http://www.douban.com/group/topic/32911014/)
+
+##xScope 
+
+xScope 主要支持10项功能：镜像、文字测量、尺寸、尺子、覆盖、屏幕虚拟、取色器、标尺、框架和十字标。设计师可以通过 xScope 中提供的小工具测量屏幕上的元素尺寸，软件支持多种方式的测量，还有颜色和iPhone 界面快速设计等功能。对于界面设计师来说，这些界面尺寸测量工具非常好用，xScope  也是很好的工具软件。xScope  来自开发商 Iconfactory，这家开发商也是知名推特开发商 Twitterrific 的开发商。这次 xScope 更新至4.0版本，界面设计上与将于今年秋天发布的 OS X Yosemite 适配，功能和体验也大幅提升。
+
+参考链接：[http://www.macx.cn/thread-2131921-1-1.html](http://www.macx.cn/thread-2131921-1-1.html)
+
+##CodeRunner 
+
+odeRunner是一款可以兼容运行各种主流语言代码并查看效果的强力工具，支持的语言包括C, C++, Java, JavaScript等十余种语言；同时还具有代码编辑/测试，脚本运行，自定义模板，内置控制台等功能和服务。
+
+1.默认支持的语言：AppleScript, C, C++, Java, JavaScript (Node.js), Lua, Objective-C, Perl, PHP, Python, Ruby, Shell,Swift
+
+2.自定义模板：无需写出完整功能即可马上测试架构
+
+3.添加自己需要的语言
+
+4.与其他代码工具一样强大的编辑功能：自动补全，句法高亮，多标签页，自定义主题，内置浏览器
+
+5.内置控制台
+
+参考链接：[http://www.waerfa.com/coderunner](http://www.waerfa.com/coderunner)
+
+##BeyondCompare
+
+Beyond Compare 是一款不可多得的专业级的文件夹和文件对比工具。使用他可以很方便的对比出两个文件夹或者文件的不同之处。并把相差的每一个字节用颜色加以表示，查看方便。并且支持多种规则对比。
+
+参考链接：[http://baike.baidu.com/link?url=Wpa2i6UZS_EDpX1RFWgkLwxYy2P9qX1D5a4GBXkvTQovGNlK4h8jCKQsrFwXDPOiYcnKE9NTKofhwYmR-VCZm_](http://baike.baidu.com/link?url=Wpa2i6UZS_EDpX1RFWgkLwxYy2P9qX1D5a4GBXkvTQovGNlK4h8jCKQsrFwXDPOiYcnKE9NTKofhwYmR-VCZm_)
+
+##BetterZip
+
+快速的压缩工具. 支持多种格式
+　　zip, gz, bz, bz2, tar, tgz, tbz, rar, 7-zip, cpio, arj, lha, lhz, cab, iso, chm, rpm, deb, nsis, sit, dd, hqx, and bin
+
+参考链接：[http://soft.macx.cn/3185.htm](http://soft.macx.cn/3185.htm)
+
+##Tuxera NTFS 
+
+Tuxera NTFS是一款Windows NTFS 格式硬盘读写组件，有了它就可以轻松读写NTFS格式的移动硬盘，方便文件在两个OS平台间快速传送；另外还可以启用文件系统缓存，排错日志记录等操作。
+
+参考链接：[http://www.waerfa.com/tuxera-ntfs](http://www.waerfa.com/tuxera-ntfs)[
+
+##须鼠管 输入法（强烈推荐）
+
+鼠须管（Squirrel）是一个 Mac 平台的输入法，它基于 RIME／中州韵输入法引擎。RIME 是一个跨平台的输入法框架，在 Linux 下，名为 中州韵，Windows 则为小狼毫。这套算法支持朙月拼音、仓颉五代、五笔86、粤拼、吴语、中古全拼／三拼、国际音标输入法及 emoji 表情等几乎所有音码和形码输入法。
+
+参考链接：[http://www.ifanr.com/156409](http://www.ifanr.com/156409)
+
+##XnConvert 图片处理工具
+
+XnConvert是一款简单易用的批量图像格式转换软件（免费软件）。你可以轻松的实现图像格式的转换、缩放图像比例、添加滤镜特效、水印等等。
+
+参考连接：官网[http://www.xnview.com/en/](http://www.xnview.com/en/)
+
+
+>软件安装问题
+“Dash.app”已损坏,打不开。 您应该将它移到废纸篓。如果遇到这种问题。百度就行了。我找了个链接`Mac OS X 系统运行程序时出现「xxx.app已损坏,打不开.你应该将它移到废纸篓」错误信息的解决方法 | 玩转苹果` [http://www.ifunmac.com/2013/10/app-breakdown/](http://www.ifunmac.com/2013/10/app-breakdown/)
+
+
+参考资料：
+
+ * 豆瓣 [http://www.douban.com/subject/11627846/](http://www.douban.com/subject/11627846/)
+
+ * 玩法儿 [http://www.waerfa.com](http://www.waerfa.com)
+
+ * macx [http://www.macx.cn/](http://www.macx.cn/)
+
+ * 那些好用的iOS开发工具 [http://www.devtang.com/blog/2014/06/29/ios-dev-tools/](http://www.devtang.com/blog/2014/06/29/ios-dev-tools/)（推荐看唐巧的这篇博客）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
